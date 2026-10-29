@@ -88,7 +88,7 @@ context_prompt = ChatPromptTemplate.from_messages([
 qa_prompt = ChatPromptTemplate.from_messages([("system","""
 You are an assistant for question-answering task.
 Use the following retrieved context to answer the question.
-If you don't know the answer say that you don't know.
+If you don't know the answer use your own knowledge.
 Use maximum three sentences and keep the answer concise. 
 {context}
 """),
@@ -125,13 +125,13 @@ if groq_api_key and uploaded_files:
                                                history_messages_key="chat_history")
 
     user_input =st.text_input("your question:")
-
-    if user_input:
-      session_id = st.session_state["session_id"]
-      session_history = get_session_history(session_id)
-      config = {"configurable":{"session_id":session_id}}
-      response = chat_with_history.invoke({"input": user_input},config)
-      st.success(response["answer"])
+    if st.button("Submit Query"):
+      if user_input:
+        session_id = st.session_state["session_id"]
+        session_history = get_session_history(session_id)
+        config = {"configurable":{"session_id":session_id}}
+        response = chat_with_history.invoke({"input": user_input},config)
+        st.success(response["answer"])
 
 else:
       st.warning("Please enter your GROQ API KEY")
